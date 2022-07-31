@@ -1,0 +1,13 @@
+{
+  "name": "EEG Pause/Play",
+  "description": "Pause and play any video with your mind",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "tabs"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
