@@ -38,3 +38,17 @@ if __name__ == '__main__':
         for number in format_csv_line(line):
             row_data.append(number)
         data.append(row_data)
+
+# -------------------------------------------------------------------------------------
+
+        # HOW TO READ THE DATA (the muse 2 output)
+        # data = [[1,2,3,4], #0
+        #         [1,2,3,4]] #1
+        #         #0,1,2,3
+
+        # Example: checks to see if the most recent entry of the muse 2 data
+        # is above 50 for each of the four streams
+        if data[len(data)-1][0] > 50 and data[len(data)-1][1] > 50 and \
+                data[len(data)-1][2] > 50 and data[len(data)-1][3] > 50:
+            pass
+
