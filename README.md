@@ -1,2 +1,7 @@
 # natHACKS-PAIM
-edit by ameer
+
+Currently a WIP
+
+Goals achieved:
+- Connect the MUSE 2 hardware to the laptop
+
