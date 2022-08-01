@@ -10,3 +10,5 @@ Prospects:
 - More advanced tasks using saccades
 - Proper app for the program
 
+# Before Installing:
+
