@@ -6,7 +6,7 @@ from ppadb.client import Client as AdbClient
 
 def accept_call(device_):
     # Send the "accept call signal to the connected device
-    device_.shell('input keyevent 27')
+    device_.shell('input keyevent 5')
 
 
 def get_file_recent_lines(file_):
@@ -54,6 +54,9 @@ if __name__ == '__main__':
     file = open("eeg_boiler.csv", "r")
     recent_lines = get_file_recent_lines(file)
     # Repeat for every new row in the csv file
+    blinked_last = False
+    blinked_timeout_max = 40
+    blinked_timeout = 0
     for line in recent_lines:
         # Uncomment for print debug:
         # print(line)
@@ -75,7 +78,16 @@ if __name__ == '__main__':
 # -------------------------------------------------------------------------------------
 
         # Primative blink detection use
-        if 650 > data[len(data) - 1][0] or data[len(data) - 1][0] < -750:
-            # Send the call signal to the phone
-            accept_call(device)
+        blinked_timeout = max(blinked_timeout-1, 0)
+        if (800 > data[len(data) - 1][0] and data[len(data) - 1][0] < -900) \
+            and (800 > data[len(data) - 1][1] and data[len(data) - 1][0] < -800):
+            if not blinked_last and blinked_timeout <= 0:
+                # Send call signal
+                accept_call(device)
+                print("worked")
+                blinked_timeout = blinked_timeout_max
+            blinked_last = True
+        else:
+            blinked_last = False
+
 
