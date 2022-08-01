@@ -1,5 +1,12 @@
 import time
 import keyboard
+import time
+from ppadb.client import Client as AdbClient
+
+
+def accept_call(device_):
+    # Send the "accept call signal to the connected device
+    device_.shell('input keyevent 27')
 
 
 def get_file_recent_lines(file_):
@@ -21,12 +28,34 @@ def format_csv_line(line_):
     return numbers
 
 
+def connect():
+    # Entirety of this function provided by https://gist.github.com/1Blademaster/8aae153f2702fb090a1876d94ca8693f
+    client = AdbClient(host="127.0.0.1", port=5037) # Default is "127.0.0.1" and 5037
+
+    devices = client.devices()
+
+    if len(devices) == 0:
+        print('No devices')
+        quit()
+
+    device = devices[0]
+
+    print(f'Connected to {device}')
+
+    return device, client
+
+
 if __name__ == '__main__':
+    # Initialize EEG data array
     data = []
+    # Initialize connection to phone
+    device, client = connect()
+    # Connection to csv file
     file = open("eeg_boiler.csv", "r")
     recent_lines = get_file_recent_lines(file)
+    # Repeat for every new row in the csv file
     for line in recent_lines:
-        # Uncomment for print debug
+        # Uncomment for print debug:
         # print(line)
         # if keyboard.is_pressed('q'):
         #     for row in data:
@@ -38,17 +67,15 @@ if __name__ == '__main__':
         for number in format_csv_line(line):
             row_data.append(number)
         data.append(row_data)
-
-# -------------------------------------------------------------------------------------
-
         # HOW TO READ THE DATA (the muse 2 output)
         # data = [[1,2,3,4], #0
         #         [1,2,3,4]] #1
         #         #0,1,2,3
 
-        # Example: checks to see if the most recent entry of the muse 2 data
-        # is above 50 for each of the four streams
-        if data[len(data)-1][0] > 50 and data[len(data)-1][1] > 50 and \
-                data[len(data)-1][2] > 50 and data[len(data)-1][3] > 50:
-            pass
+# -------------------------------------------------------------------------------------
+
+        # Primative blink detection use
+        if 650 > data[len(data) - 1][0] or data[len(data) - 1][0] < -750:
+            # Send the call signal to the phone
+            accept_call(device)
 
